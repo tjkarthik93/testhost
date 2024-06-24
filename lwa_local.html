@@ -1,0 +1,348 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Amazon Example</title>
+</head>
+<body>
+
+<div id="amazon-root"></div>
+ <script type="text/javascript">
+
+    window.onAmazonLoginReady = function() {
+      amazon.Login.setClientId('4cbv1cl5mt14lumn38h0oo8oas');
+    };
+    (function(d) {
+      var a = d.createElement('script'); a.type = 'text/javascript';
+      a.async = true; a.id = 'amazon-login-sdk';
+      a.src = 'https://assets.loginwithamazon.com/sdk/na/login1.js';
+      d.getElementById('amazon-root').appendChild(a);
+    })(document);
+
+</script>
+<div id="amazon-root"></div>
+<button id="LoginWithAmazon">Login with Amazon</button>
+<button onclick="logout()">Logout</button>
+<script type="text/javascript">
+    // Initialize the Amazon SDK
+    const loginButton = document.getElementById('LoginWithAmazon');
+    loginButton.addEventListener('click', function() {
+    setTimeout(window.doLogin, 1);
+    return false;
+    });
+    
+
+    // document.getElementById('LoginWithAmazon').onclick = function() {
+    //    setTimeout(window.doLogin, l);
+    //    return false;
+    // };
+    window.doLogin = function() {
+        options = {};
+        options.scope = 'profile';
+        //options.pkce = true;
+        amazon.Login.authorize(options, function(response) {
+            if ( response.error ) {
+                alert('oauth error ' + response.error);
+            return;
+            }
+            amazon.Login.retrieveToken(response.code, function(response) {
+                if ( response.error ) {
+                    alert('oauth error ' + response.error);
+                return;
+                }
+                amazon.Login.retrieveProfile(response.access_token, function(response) {
+                    alert('Hello, ' + response.profile.Name);
+                    alert('Your e-mail address is ' + response.profile.PrimaryEmail);
+                    alert('Your unique ID is ' + response.profile.CustomerId);
+                    if ( window.console && window.console.log )
+                       window.console.log(response);
+                });
+            });
+        });
+   };
+
+    // Function to handle login
+    // function login() {
+    //     amazon.Login.authorize({ scope: 'profile' }, function(response) {
+    //         if (response.error) {
+    //             alert('Login failed: ' + response.error);
+    //             return;
+    //         }
+    //         // Handle successful login
+    //         console.log('Login successful!');
+    //         console.log(response);
+    //         // You can now use response.access_token to authenticate the user on your server.
+    //     });
+    // }
+
+    // Function to handle logout
+    function logout() {
+        amazon.Login.logout();
+        console.log('Logged out.');
+    }
+</script>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Amazon Example</title>
+</head>
+<body>
+
+    <div id="amazon-root"></div>
+    <script type="text/javascript">
+   
+       window.onAmazonLoginReady = function() {
+         amazon.Login.setClientId('4cbv1cl5mt14lumn38h0oo8oas');
+       };
+       (function(d) {
+         var a = d.createElement('script'); a.type = 'text/javascript';
+         a.async = true; a.id = 'amazon-login-sdk';
+         a.src = 'https://assets.loginwithamazon.com/sdk/na/login1.js';
+         d.getElementById('amazon-root').appendChild(a);
+       })(document);
+   
+   </script>
+<a href="https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=LoginWithAmazon&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=CODE&client_id=4cbv1cl5mt14lumn38h0oo8oas&scope=email+openid+profile"> Check LWA </a>
+<button id="LoginWithAmazon" onclick="logout()">Login with Amazon</button>
+<button onclick="logout()">Logout</button>
+   <script type="text/javascript">
+    function loginwa() {
+        try {
+        window.location.href=`https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=LoginWithAmazon&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=CODE&client_id=4cbv1cl5mt14lumn38h0oo8oas&scope=email+openid+profile`;
+       
+        console.log('User successfully signed in:');
+        const token = window.location.href.slice
+        // Handle successful login (redirect, display message, etc.)
+      } catch (error) {
+        console.error('Error during sign in:', error);
+        // Handle login errors (display error message to user)
+      }
+    }
+
+    function logout() {
+        options = {}
+        options.popup=false;
+        options.scope = 'profile';
+        options.response_type='code';
+        // options.scope_data = {
+        //     'profile' : {'essential': false}
+        // };
+        amazon.Login.authorize(options,
+            'http://localhost:3000');
+        return false;
+    }
+</script>
+</body>
+</html>  -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognito LWA with Access Token</title>
+  
+</head>
+<body>
+  <h1>Sign In with Cognito</h1>
+  <button id="sign-in-btn">Sign In</button>
+
+  <script>
+    const signInBtn = document.getElementById('sign-in-btn');
+    const originurl = window.location.href;
+    const cognitoUrl = 'https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=LoginWithAmazon&&redirect_uri=https%3A%2F%2Foak.us-west-2.alpha.amazon-aqt.com&response_type=code&client_id=4cbv1cl5mt14lumn38h0oo8oas&scope=email+openid+profile'; // Replace with your actual Cognito LWA URL
+    document.cookie="code_verifier=1234;path=/"
+    signInBtn.addEventListener('click', () => {
+      window.location.href = `${cognitoUrl}`;
+    });
+    function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+    // This code will run after redirect from Cognito LWA
+    if (window.location.search.includes('code=')) {
+      const code = new URLSearchParams(window.location.search).get('code');
+
+     // https://aqt-prod.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=LoginWithAmazon&redirect_uri=https%3A%2F%2Fdeveloper.amazon.com%2Falexa%2Fconsole%2Fwwa%2Fcertification%2Flist&response_type=CODE&client_id=580cr10k4hgrncaffsu2cnduc1&scope=email+openid+profile
+
+      // Replace with your access token URL (including client ID and secret)
+      //const accessTokenUrl = `https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/token?grant_type=authorization_code&client_id=4cbv1cl5mt14lumn38h0oo8oas&code=${code}&redirect_uri=${window.location.origin}`;
+      const accessTokenUrl = 'https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/token';
+      const cookievalue=getCookie("code_verifier")
+      const accessTokenUrl1 = `https://aqt-alpha.auth.us-west-2.amazoncognito.com/authentication?auth_code=${code}&redirect_url=http%3A%2F%2Flocalhost%3A3000%2F`;
+      const accessTokenUrl2 = `https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/token?grant_type=authorization_code&client_id=4cbv1cl5mt14lumn38h0oo8oas&code=${code}&redirect_uri=https%3A%2F%2Foak.us-west-2.alpha.amazon-aqt.com%2Fsignout.html&code_verifier=${cookievalue}`;
+      //const payload = `'{"grant_type":"authorization_code", "client_id":"4cbv1cl5mt14lumn38h0oo8oas", "code":"${code}", "redirect_uri": "${window.location.origin}"}'`;
+      const payload = `grant_type=authorization_code&code=${code}&client_id=4cbv1cl5mt14lumn38h0oo8oas&redirect_uri=https%3A%2F%2Fdeveloper.amazon.com%2Falexa%2Fconsole%2Fwwa%2Fcertification%2Flist`;
+      console.log(payload);
+      fetch(accessTokenUrl2, {
+        //"body": `grant_type=authorization_code&code=${code}&client_id=4cbv1cl5mt14lumn38h0oo8oas&redirect_uri=https%3A%2F%2Fdeveloper.amazon.com%2Falexa%2Fconsole%2Fwwa%2Fcertification%2Flist`,
+        method: 'get',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => {
+          response.json()
+          console.log('respone Token:', JSON.stringify(response));
+    })
+        .then(data => {
+          console.log('Access Token:', data.access_token);
+          // Use the access token for your application logic here
+        })
+        .catch(error => console.error('Error fetching access token:', error));
+    }
+  </script>
+</body>
+</html>
+
+
+<!-- <html>
+<head>
+<title>Shape Up!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript">
+
+function clearCognito() {
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+     IdentityPoolId: 'us-west-2:c98e9171-4b3e-4385-92cc-3899a8886511'
+   });
+  AWS.config.credentials.clearCachedId();
+  unauthSignin();
+}
+</script>
+
+</head>
+<body>
+<div id="amazon-root"></div>
+<script type="text/javascript">
+    window.onAmazonLoginReady = function() {
+      amazon.Login.setClientId('4cbv1cl5mt14lumn38h0oo8oas');
+    };
+    (function(d) {
+      var a = d.createElement('script'); a.type = 'text/javascript';
+      a.async = true; a.id = 'amazon-login-sdk';
+      a.src = 'https://api-cdn.amazon.com/sdk/login1.js';
+      d.getElementById('amazon-root').appendChild(a);
+    })(document);
+</script>
+
+<a href id="LoginWithAmazon">
+  <img border="0" alt="Login with Amazon"
+    src="http://g-ecx.images-amazon.com/images/G/01/lwa/common/images/btnLWA_gold_209x48._CB385074205_.png" width="209" height="48" />
+</a>
+
+<script type="text/javascript">
+  document.getElementById('LoginWithAmazon').onclick = function() {
+    options = { scope : 'profile' };
+    options.redirect_uri = 'https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/token';
+    amazon.Login.authorize(options, function(response) {
+    // This function gets called once Login with Amazon is complete.
+    if ( response.error ) {
+        alert('oauth error ' + response.error);
+        return;
+      }
+      
+    // Initialize the Amazon Cognito credentials provider
+      AWS.config.region = 'us-west-2'; // Region
+      
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'us-west-2:c98e9171-4b3e-4385-92cc-3899a8886511',
+    Logins: {
+      'www.amazon.com': response.access_token
+    }
+      });
+  });
+    return false;
+  };
+</script>
+</body>
+</html> 
+-->
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amplify Login Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/aws-amplify@latest"></script>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="amazon-root"></div>
+    <div id="root"></div>
+  <h1>Login</h1>
+  <button id="login-btn">Sign In with Amazon</button>
+
+  <script>
+    const loginButton = document.getElementById('login-btn');
+    loginButton.addEventListener('click', async () => {
+      try {
+        window.location.href=`https://aqt-alpha.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=LoginWithAmazon&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=CODE&client_id=4cbv1cl5mt14lumn38h0oo8oas&scope=email+openid+profile`;
+       
+        console.log('User successfully signed in:', user);
+        // Handle successful login (redirect, display message, etc.)
+      } catch (error) {
+        console.error('Error during sign in:', error);
+        // Handle login errors (display error message to user)
+      }
+    });
+  </script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login with Amazon</title>
+  <script src="https://assets.amazon.com/js/loginwithamazon.js"></script>
+</head>
+<body>
+  <h1>Login with Amazon</h1>
+  <button id="loginWithAmazonButton">Login</button>
+
+  <script>
+    // Initialize the LWA button object
+    var auth0 = new Amazon.Auth.Login({
+      clientId: "4cbv1cl5mt14lumn38h0oo8oas", // Replace with your Amazon Developer account Client ID
+      scope: ["email openid profile"], // Request profile information from the user
+      redirectUri: "http://localhost:3000/callback.html" // Replace with your server-side redirect URI
+    });
+
+    // Click event handler for the login button
+    document.getElementById("loginWithAmazonButton").addEventListener("click", function() {
+      auth0.authorize();
+    });
+
+    // (Optional) Handle successful login and retrieve user profile information
+    // This would typically be done on your server-side after receiving the authorization code
+    // function handleSuccessfulLogin(code) {
+    //   // Exchange the authorization code for tokens and user profile information
+    //   // ...
+    // }
+  </script>
+</body>
+</html> -->
